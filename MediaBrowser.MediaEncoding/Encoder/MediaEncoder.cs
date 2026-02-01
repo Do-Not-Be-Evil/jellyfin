@@ -407,8 +407,16 @@ namespace MediaBrowser.MediaEncoding.Encoder
 
         public bool CanEncodeToSubtitleCodec(string codec)
         {
-            // TODO
-            return true;
+            if (string.Equals(codec, "subrip", StringComparison.OrdinalIgnoreCase))
+            {
+                codec = "srt";
+            }
+            else if (string.Equals(codec, "ssa", StringComparison.OrdinalIgnoreCase))
+            {
+                codec = "ass";
+            }
+
+            return SupportsEncoder(codec);
         }
 
         /// <inheritdoc />
