@@ -1,0 +1,84 @@
+# Jellyfin
+
+Jellyfin is a Free Software Media System for managing and streaming personal media. It's a self-hosted, open-source alternative to Emby and Plex with no premium features or vendor lock-in.
+
+## Tech Stack
+
+- **Language**: C# on .NET 10.0
+- **Web Framework**: ASP.NET Core with Kestrel
+- **Database**: Entity Framework Core with SQLite (default)
+- **Image Processing**: SkiaSharp
+- **Media Transcoding**: FFmpeg integration
+- **Testing**: xUnit with Moq and AutoFixture
+- **API Docs**: Swagger/OpenAPI
+
+## Architecture
+
+Layered architecture with clear separation of concerns:
+
+```
+Jellyfin.Server          → Entry point, HTTP config, startup
+    ↓
+Jellyfin.Api             → REST API controllers and middleware
+    ↓
+MediaBrowser.Controller  → Core interfaces and abstractions
+    ↓
+*Implementations         → Emby.Server.Implementations, Jellyfin.Server.Implementations
+    ↓
+MediaBrowser.Model       → DTOs and domain models
+    ↓
+MediaBrowser.Common      → Shared utilities
+```
+
+## Key Directories
+
+| Directory | Purpose |
+|-----------|---------|
+| `Jellyfin.Server` | Main entry point, Kestrel web host configuration |
+| `Jellyfin.Api` | REST API controllers (Users, Libraries, Playback, etc.) |
+| `MediaBrowser.Controller` | Core interface definitions, plugin contracts |
+| `MediaBrowser.Model` | DTOs, entities, enums, serialization models |
+| `Emby.Server.Implementations` | Core implementations inherited from Emby |
+| `Jellyfin.Server.Implementations` | Jellyfin-specific logic (Users, Devices, Security) |
+| `src/Jellyfin.Database.*` | EF Core DbContext and migrations |
+| `MediaBrowser.Providers` | Metadata providers (TheMovieDB, MusicBrainz, etc.) |
+| `src/Jellyfin.MediaEncoding.*` | Video transcoding, HLS, keyframe extraction |
+| `src/Jellyfin.LiveTv` | Live TV and recording management |
+| `src/Jellyfin.Drawing*` | Image processing with Skia |
+| `src/Jellyfin.Networking` | Network configuration |
+| `tests/` | 17 test projects mirroring main structure |
+
+## Development Commands
+
+```bash
+# Build and run
+dotnet run --project Jellyfin.Server
+
+# Run tests
+dotnet test
+
+# Build only
+dotnet build
+```
+
+## Key Patterns
+
+- **Dependency Injection**: Microsoft.Extensions.DependencyInjection throughout
+- **Repository Pattern**: Data access abstracted via EF Core
+- **Provider Pattern**: Pluggable metadata and database providers
+- **Async/Await**: Extensively used for I/O operations
+- **Middleware Pipeline**: ASP.NET Core middleware for auth, errors, compression
+
+## Code Style
+
+- Nullable reference types enabled (`<Nullable>enable</Nullable>`)
+- Warnings treated as errors in release builds
+- StyleCop and custom analyzers enforced
+- Central package management via `Directory.Packages.props`
+
+## Important Notes
+
+- Web client is in a separate repository (`jellyfin-web`)
+- FFmpeg required for media transcoding
+- Plugin system uses interfaces from `MediaBrowser.Controller`
+- Database migrations are provider-specific (SQLite in `Jellyfin.Database.Providers.Sqlite`)
