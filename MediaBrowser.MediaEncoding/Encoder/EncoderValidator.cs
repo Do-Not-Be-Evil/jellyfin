@@ -93,9 +93,11 @@ namespace MediaBrowser.MediaEncoding.Encoder
             "h264_v4l2m2m",
             "h264_videotoolbox",
             "hevc_videotoolbox",
+            "av1_videotoolbox",
             "mjpeg_videotoolbox",
             "h264_rkmpp",
             "hevc_rkmpp",
+            "av1_rkmpp",
             "mjpeg_rkmpp"
         ];
 
