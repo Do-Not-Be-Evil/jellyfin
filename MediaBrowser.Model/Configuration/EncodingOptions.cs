@@ -43,10 +43,12 @@ public class EncodingOptions
         VppTonemappingContrast = 1;
         H264Crf = 23;
         H265Crf = 28;
+        Av1Crf = 32;
         DeinterlaceDoubleRate = false;
         DeinterlaceMethod = DeinterlaceMethod.yadif;
         EnableDecodingColorDepth10Hevc = true;
         EnableDecodingColorDepth10Vp9 = true;
+        EnableDecodingColorDepth10Av1 = true;
         EnableDecodingColorDepth10HevcRext = false;
         EnableDecodingColorDepth12HevcRext = false;
         // Enhanced Nvdec or system native decoder is required for DoVi to SDR tone-mapping.
@@ -54,6 +56,7 @@ public class EncodingOptions
         PreferSystemNativeHwDecoder = true;
         EnableIntelLowPowerH264HwEncoder = false;
         EnableIntelLowPowerHevcHwEncoder = false;
+        EnableIntelLowPowerAv1HwEncoder = false;
         EnableHardwareEncoding = true;
         AllowHevcEncoding = false;
         AllowAv1Encoding = false;
@@ -215,6 +218,11 @@ public class EncodingOptions
     public int H265Crf { get; set; }
 
     /// <summary>
+    /// Gets or sets the AV1 CRF.
+    /// </summary>
+    public int Av1Crf { get; set; }
+
+    /// <summary>
     /// Gets or sets the encoder preset.
     /// </summary>
     public EncoderPreset? EncoderPreset { get; set; }
@@ -238,6 +246,11 @@ public class EncodingOptions
     /// Gets or sets a value indicating whether 10bit VP9 decoding is enabled.
     /// </summary>
     public bool EnableDecodingColorDepth10Vp9 { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether 10bit AV1 decoding is enabled.
+    /// </summary>
+    public bool EnableDecodingColorDepth10Av1 { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether 8/10bit HEVC RExt decoding is enabled.
@@ -268,6 +281,11 @@ public class EncodingOptions
     /// Gets or sets a value indicating whether the Intel HEVC low-power hardware encoder should be used.
     /// </summary>
     public bool EnableIntelLowPowerHevcHwEncoder { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the Intel AV1 low-power hardware encoder should be used.
+    /// </summary>
+    public bool EnableIntelLowPowerAv1HwEncoder { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether hardware encoding is enabled.

@@ -1677,6 +1677,16 @@ namespace MediaBrowser.Controller.MediaEncoding
                     EncoderPreset.ultrafast => " -preset 13",
                     _ => " -preset 10"
                 };
+
+                int av1Crf = encodingOptions.Av1Crf;
+                if (av1Crf >= 0 && av1Crf <= 63)
+                {
+                    param += " -crf " + av1Crf.ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    param += " -crf 32";
+                }
             }
             else if (string.Equals(videoEncoder, "h264_vaapi", StringComparison.OrdinalIgnoreCase)
                      || string.Equals(videoEncoder, "hevc_vaapi", StringComparison.OrdinalIgnoreCase)
@@ -2009,6 +2019,10 @@ namespace MediaBrowser.Controller.MediaEncoding
                 {
                     intelLowPowerHwEncoding = encodingOptions.EnableIntelLowPowerHevcHwEncoder && isIntelVaapiDriver;
                 }
+                else if (string.Equals(videoEncoder, "av1_vaapi", StringComparison.OrdinalIgnoreCase))
+                {
+                    intelLowPowerHwEncoding = encodingOptions.EnableIntelLowPowerAv1HwEncoder && isIntelVaapiDriver;
+                }
             }
             else if (hardwareAccelerationType == HardwareAccelerationType.qsv)
             {
@@ -2040,6 +2054,10 @@ namespace MediaBrowser.Controller.MediaEncoding
                 else if (string.Equals(videoEncoder, "hevc_qsv", StringComparison.OrdinalIgnoreCase))
                 {
                     intelLowPowerHwEncoding = encodingOptions.EnableIntelLowPowerHevcHwEncoder;
+                }
+                else if (string.Equals(videoEncoder, "av1_qsv", StringComparison.OrdinalIgnoreCase))
+                {
+                    intelLowPowerHwEncoding = encodingOptions.EnableIntelLowPowerAv1HwEncoder;
                 }
                 else
                 {
@@ -6432,6 +6450,13 @@ namespace MediaBrowser.Controller.MediaEncoding
                 {
                     return null;
                 }
+
+                if (string.Equals(videoCodec, "av1", StringComparison.OrdinalIgnoreCase)
+                    && options.HardwareDecodingCodecs.Contains("av1", StringComparison.OrdinalIgnoreCase)
+                    && !options.EnableDecodingColorDepth10Av1)
+                {
+                    return null;
+                }
             }
 
             if (string.Equals(decoderSuffix, "cuvid", StringComparison.OrdinalIgnoreCase) && options.EnableEnhancedNvdecDecoder)
@@ -6528,6 +6553,14 @@ namespace MediaBrowser.Controller.MediaEncoding
                     && options.HardwareDecodingCodecs.Contains("vp9", StringComparison.OrdinalIgnoreCase)
                     && bitDepth == 10
                     && !options.EnableDecodingColorDepth10Vp9)
+                {
+                    return null;
+                }
+
+                if (string.Equals(videoCodec, "av1", StringComparison.OrdinalIgnoreCase)
+                    && options.HardwareDecodingCodecs.Contains("av1", StringComparison.OrdinalIgnoreCase)
+                    && bitDepth == 10
+                    && !options.EnableDecodingColorDepth10Av1)
                 {
                     return null;
                 }
